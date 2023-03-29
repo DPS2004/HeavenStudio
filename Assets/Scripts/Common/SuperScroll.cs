@@ -22,6 +22,10 @@ namespace HeavenStudio.Common
 
         public float TileX = 1.0f;
         public float TileY = 1.0f;
+
+        public bool Autoscroll = false;
+        public float AutoscrollX = 0.0f;
+        public float AutoscrollY = 0.0f;
         public Vector2 Tile { get { return new Vector2(TileX, TileY); } set { TileX = value.x; TileY = value.y; } }
 
         public Material Material => _renderer.material;
@@ -40,6 +44,16 @@ namespace HeavenStudio.Common
             Material.mainTexture = tex;
         }
 
+        public void Update()
+        {
+            if (Autoscroll)
+            {
+
+                NormalizedX = (float)((NormalizedX + (AutoscrollX * Time.deltaTime)) % 1.0);
+                NormalizedY = (float)((NormalizedY + (AutoscrollY * Time.deltaTime)) % 1.0);
+            }
+        }
+
         public void LateUpdate()
         {
             _renderer.material.mainTextureScale = Tile;
@@ -54,6 +68,7 @@ namespace HeavenStudio.Common
         {
             var colors = original.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
             var newTex = new Texture2D((int)rect.width - (int)rect.x, (int)rect.height - (int)rect.y);
+
 
             newTex.SetPixels(colors);
             newTex.Apply();
